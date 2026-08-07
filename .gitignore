@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.npm-cache/
+*.tsbuildinfo
+node-v*-win-x64.zip
+
+# 本地测试织片可能包含用户素材和项目备份；公开仓库仅保留规范与模板。
+项目文件/*
+!项目文件/README.md
+!项目文件/项目模板/
+!项目文件/项目模板/**
