@@ -9,10 +9,50 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23182f4a'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='white'%3EKK%3C/text%3E%3C/svg%3E" />
     <title>纱线小喵 | Knit Kit</title>
     <script type="module" crossorigin src="./assets/index-cUViE75_.js"></script>
-    <script defer src="./assets/ipad-row-height-input.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DNxE-KiU.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.addEventListener('load', function () {
+        try {
+          var ipad = /iPad/.test(navigator.userAgent) ||
+            (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+          if (!ipad) return;
+
+          var editing = null;
+          var originalValue = '';
+
+          function isRowHeightInput(target) {
+            var label = target && target.closest && target.closest('label');
+            return target && target.tagName === 'INPUT' && target.type === 'number' &&
+              label && label.textContent.indexOf('1排高度') !== -1;
+          }
+
+          document.addEventListener('focusin', function (event) {
+            if (!isRowHeightInput(event.target)) return;
+            editing = event.target;
+            originalValue = editing.value;
+            editing.setAttribute('inputmode', 'decimal');
+          }, true);
+
+          document.addEventListener('input', function (event) {
+            if (event.target === editing) event.stopImmediatePropagation();
+          }, true);
+
+          document.addEventListener('focusout', function (event) {
+            if (event.target !== editing) return;
+            var input = editing;
+            editing = null;
+            if (!isFinite(input.valueAsNumber) || input.valueAsNumber < 0.1) {
+              input.value = originalValue;
+            }
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          }, true);
+        } catch (_) {
+          // Compatibility code must never prevent the main application loading.
+        }
+      });
+    </script>
   </body>
 </html>
